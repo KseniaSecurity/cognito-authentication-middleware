@@ -1,9 +1,5 @@
 const  CognitoExpress = require('cognito-express')
 
-//Initializing CognitoExpress constructor
-let cognitoExpress
-
-
 function readBearerToken(req) {
     let token = (req.headers['x-access-token'] || req.headers['authorization'] || '').toString();
     if (token.startsWith('Bearer ')) {
@@ -19,7 +15,7 @@ module.exports = function (awsRegion, cognitoUserPoolId) {
     if (!cognitoUserPoolId)
         throw Error('missing mandatory cognitoUserPoolId parameter')
 
-    cognitoExpress = new CognitoExpress({
+    const cognitoExpress = new CognitoExpress({
         region: awsRegion,
         cognitoUserPoolId: cognitoUserPoolId,
         tokenUse: "access", //Possible Values: access | id
@@ -35,7 +31,7 @@ module.exports = function (awsRegion, cognitoUserPoolId) {
         } else {
             try {
                 req.user = await cognitoExpress.validate(accessTokenFromClient)
-                return req
+                next()
             } catch (err) {
                 next('CognitoValidationError')
             }

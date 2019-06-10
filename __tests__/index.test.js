@@ -42,8 +42,9 @@ describe('middleware', () => {
                     }))
                 }
             }))
-            let req = await authentication('awsRegion', 'cognitoUserPoolId')
-            ({ headers: { authorization: 'token' } }, {}, spy)
+            let req = { headers: { authorization: 'token' } }
+            await authentication('awsRegion', 'cognitoUserPoolId')(req, {}, spy)
+            expect(spy).toBeCalled()
             expect(req.user).toEqual({ username: 'foo' })
         })
         it('should reject in case of validation error', async () => {
