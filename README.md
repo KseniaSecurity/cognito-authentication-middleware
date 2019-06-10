@@ -1,6 +1,6 @@
 # cognito-authentication-middleware
 
-It's a middleware for cognito authentication.
+It's a middleware for cognito authentication based on [cognito-express](https://www.npmjs.com/package/cognito-express).
 
 It provides a function:
 
