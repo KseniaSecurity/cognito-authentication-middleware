@@ -10,16 +10,16 @@ describe('middleware', () => {
         destroy()
     })
 
-    describe('init', () => {
+    describe('authentication', () => {
         it('should thrown an error in case of missing awsRegion parameter', () => {
-            expect(() => init()).toThrow('missing mandatory awsRegion parameter')
+            expect(() => authentication()).toThrow('missing mandatory awsRegion parameter')
         })
         it('should thrown an error in case of missing cognitoUserPoolId parameter', () => {
-            expect(() => init('cognitoUserPoolId')).toThrow('missing mandatory cognitoUserPoolId parameter')
+            expect(() => authentication('cognitoUserPoolId')).toThrow('missing mandatory cognitoUserPoolId parameter')
         })
         it('should create an instance of cognito express', () => {
             CognitoExpress.mockImplementation(spy)
-            init('awsRegion', 'cognitoUserPoolId')
+            authentication('awsRegion', 'cognitoUserPoolId')
             expect(spy).toBeCalledWith({
                 region: 'awsRegion',
                 cognitoUserPoolId: 'cognitoUserPoolId',
@@ -27,22 +27,14 @@ describe('middleware', () => {
                 tokenExpiration: 3600000
             })
         })
-    })
-    describe('authentication', () => {
-        it('should reject in case of missing initialization', async () => {
-            await authentication({ headers: {} }, {}, spy)
-            expect(spy).toBeCalledWith('CognitoNotInitializedError')
-        })
 
         it('should reject in case of missing token', async () => {
-            init('awsRegion', 'cognitoUserPoolId')
-            await authentication({ headers: {} }, {}, spy)
+            await authentication('awsRegion', 'cognitoUserPoolId')({ headers: {} }, {}, spy)
             expect(spy).toBeCalledWith('TokenMissingError')
         })
 
         it('should reject in case of empty token', async () => {
-            init('awsRegion', 'cognitoUserPoolId')
-            await authentication({ headers: { authorization: '' } }, {}, spy)
+            await authentication('awsRegion', 'cognitoUserPoolId')({ headers: { authorization: '' } }, {}, spy)
             expect(spy).toBeCalledWith('TokenMissingError')
         })
         it('should call validate with accessToken and return the user', async () => {
@@ -54,8 +46,8 @@ describe('middleware', () => {
                     }))
                 }
             }))
-            init('awsRegion', 'cognitoUserPoolId')
-            let req = await authentication({ headers: { authorization: 'token' } }, {}, spy)
+            let req = await authentication('awsRegion', 'cognitoUserPoolId')
+            ({ headers: { authorization: 'token' } }, {}, spy)
             expect(req.user).toEqual({ username: 'foo' })
         })
         it('should reject in case of validation error', async () => {
@@ -65,8 +57,7 @@ describe('middleware', () => {
                     return new Promise((resolve, reject) => reject(new Error('something wrong')))
                 }
             }))
-            init('awsRegion', 'cognitoUserPoolId')
-            await authentication({ headers: { authorization: 'token' } }, {}, spy)
+            await authentication('awsRegion', 'cognitoUserPoolId')({ headers: { authorization: 'token' } }, {}, spy)
 
             expect(spy).toBeCalledWith('CognitoValidationError')
         })
