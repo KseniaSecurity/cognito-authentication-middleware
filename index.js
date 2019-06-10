@@ -1,4 +1,4 @@
-import CognitoExpress from 'cognito-express'
+const  CognitoExpress = require('cognito-express')
 
 //Initializing CognitoExpress constructor
 let cognitoExpress
@@ -13,7 +13,7 @@ function readBearerToken(req) {
     return token;
 }
 
-export default function authentication(awsRegion, cognitoUserPoolId) {
+module.exports = function (awsRegion, cognitoUserPoolId) {
     if (!awsRegion)
         throw Error('missing mandatory awsRegion parameter')
     if (!cognitoUserPoolId)
