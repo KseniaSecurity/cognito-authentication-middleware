@@ -4,4 +4,4 @@ declare namespace Express {
     }
 }
 
-export default (awsRegion: string, cognitoUserPoolId: string) => (req: Request, res: Response, next: any) => Void
+export default (awsRegion: string, cognitoUserPoolId: string) => RequestHandlerParams
