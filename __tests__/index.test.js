@@ -1,5 +1,5 @@
 import CognitoExpress from 'cognito-express'
-import authentication from "../src"
+import authentication from "../"
 
 jest.mock('cognito-express')
 
