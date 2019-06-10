@@ -3,10 +3,6 @@ import CognitoExpress from 'cognito-express'
 //Initializing CognitoExpress constructor
 let cognitoExpress
 
-export function destroy() {
-    cognitoExpress = undefined
-}
-
 
 function readBearerToken(req) {
     let token = (req.headers['x-access-token'] || req.headers['authorization'] || '').toString();
@@ -17,7 +13,7 @@ function readBearerToken(req) {
     return token;
 }
 
-export function authentication(awsRegion, cognitoUserPoolId) {
+export default function authentication(awsRegion, cognitoUserPoolId) {
     if (!awsRegion)
         throw Error('missing mandatory awsRegion parameter')
     if (!cognitoUserPoolId)

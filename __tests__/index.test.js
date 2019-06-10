@@ -1,14 +1,10 @@
 import CognitoExpress from 'cognito-express'
-import { init, destroy, authentication } from "../src"
+import authentication from "../src"
 
 jest.mock('cognito-express')
 
 describe('middleware', () => {
     const spy = jest.fn();
-
-    beforeEach(() => {
-        destroy()
-    })
 
     describe('authentication', () => {
         it('should thrown an error in case of missing awsRegion parameter', () => {
