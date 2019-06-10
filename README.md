@@ -2,10 +2,15 @@
 
 It's a middleware for cognito authentication based on [cognito-express](https://www.npmjs.com/package/cognito-express).
 
-It provides a function:
+## How to use
 
-- authentication(awsRegion, cognitoUserPoolId)(req, res, next)
-
-The cognito access token must be provided by request header using authorization or x-access-token field (Bearer).
+```
+import authentication from 'cognito-authentication-middleware'
+...
+const app = express()
+const awsRegion = 'Your AWS region'
+const cognitoUserPoolId = 'Your Cognito User Pool Id'
+app.use(authentication(awsRegion, cognitoUserPoolId))
+```
 
 The authenticated user will be available on request.user field.
